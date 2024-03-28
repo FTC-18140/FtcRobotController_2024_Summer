@@ -5,7 +5,9 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,8 +20,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
+;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ import java.util.List;
 public class ThunderbotAuto2023
 {
 
-    public SampleMecanumDrive drive;
+    public MecanumDrive drive;
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
@@ -86,7 +88,7 @@ public class ThunderbotAuto2023
     {
         telemetry = telem;
 
-        drive = new SampleMecanumDrive(ahwMap);
+        drive = new MecanumDrive(ahwMap, new Pose2d(0,0,0));
 
         try {
             allHubs = ahwMap.getAll(LynxModule.class);
@@ -127,8 +129,8 @@ public class ThunderbotAuto2023
 
     }
     public void joystickDrive(double forward, double right, double clockwise) {
-        Pose2d thePose = new Pose2d(right, forward, clockwise);
-        drive.setWeightedDrivePower(thePose);
+        PoseVelocity2d thePose = new PoseVelocity2d(new Vector2d(right, forward), clockwise);
+        drive.setDrivePowers(thePose);
     }
 
     public boolean driveToTag(int tagID, double speed, double distanceAway)
@@ -172,13 +174,10 @@ public class ThunderbotAuto2023
         {
             module.clearBulkCache();
         }
-        drive.update();
+        drive.updatePoseEstimate();
 
-        telemetry.addData("Motor Position", drive.getPoseEstimate());
-        telemetry.addData("Motor Velocities:", drive.getWheelVelocities());
-        telemetry.addData("Heading: ", drive.getPoseEstimate().getHeading());
-
-        PoseStorage.currentPose = drive.getPoseEstimate();
+        telemetry.addData("Motor Position", drive.pose);
+        telemetry.addData("Heading: ", drive.pose.heading);
 
         notifyTheDriver1 = false;
         notifyTheDriver2 = false;
@@ -201,7 +200,7 @@ public class ThunderbotAuto2023
     public void start(){}
 
     public void stop() {
-        drive.setMotorPowers(0,0,0,0);
+        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
     }
 
     public String getSpikePos()
