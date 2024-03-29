@@ -6,9 +6,7 @@ import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -40,11 +38,9 @@ public class Thunderbot2023
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
-    public EndGame endGame = new EndGame();
+    public LiftArms liftArms = new LiftArms();
     public Intake intake = new Intake();
     public ArtemisEyes eyes = new ArtemisEyes();
-
-    public Sensors sensors = new Sensors();
     List<LynxModule> allHubs;
 
     // Position Variables
@@ -212,7 +208,7 @@ public class Thunderbot2023
         try { linearSlide.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Lift not found", 0); }
 
-        try {  endGame.init(ahwMap, telem); }
+        try {  liftArms.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
         try { delivery.init(ahwMap, telem, ifAuto); }
@@ -220,12 +216,6 @@ public class Thunderbot2023
 
         try {  intake.init(ahwMap, telem, ifAuto); }
         catch(Exception e) { telemetry.addData("Intake not found", 0); }
-
-        try { sensors.init(ahwMap, telem); }
-        catch (Exception e) {
-            telemetry.addData("sensors not found", 0);
-        }
-
     }
 
     /**
@@ -657,7 +647,7 @@ public class Thunderbot2023
                 delivery.update();
                 notifyTheDriver2 = delivery.gripperClosed();
             }
-            if ( endGame != null ) { endGame.update();}
+            if ( liftArms != null ) { liftArms.update();}
             if (linearSlide != null) {linearSlide.update(); }
         } catch (Exception e) {
             telemetry.addData("Exception in update() in Thunderbot2023 class.", 0);

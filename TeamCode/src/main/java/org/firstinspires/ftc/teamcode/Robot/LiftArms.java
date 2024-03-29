@@ -8,40 +8,52 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
-public class EndGame
+public class LiftArms
 {
 
     Telemetry telemetry;
 
     DcMotor leftLift = null;
     DcMotor rightLift = null;
-    double leftPower = 0;
-    private double rightPower;
+    private double leftPower = 0;
+    private double rightPower = 0;
 
     public void init(HardwareMap hwMap, Telemetry telem)
     {
         telemetry = telem;
 
-        try {
+        try
+        {
             leftLift = hwMap.dcMotor.get("oX");
             leftLift.setDirection(DcMotorSimple.Direction.FORWARD);
             leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             telemetry.addData("leftLift not found", 0);
         }
-        try {
+        try
+        {
             rightLift = hwMap.dcMotor.get("oY");
             rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightLift.setDirection(DcMotorSimple.Direction.FORWARD);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             telemetry.addData("rightLift not found", 0);
         }
     }
 
     public void update()
     {
-        if (leftLift != null) {leftPower = leftLift.getPower();}
-        if (rightLift != null) { rightPower = rightLift.getPower(); }
+        if (leftLift != null)
+        {
+            leftPower = leftLift.getPower();
+        }
+        if (rightLift != null)
+        {
+            rightPower = rightLift.getPower();
+        }
     }
 
     public void pullUp(double power)

@@ -1,25 +1,15 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.toRadians;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 ;
 
@@ -33,7 +23,7 @@ public class ThunderbotAuto2023
 
     public LinearSlide linearSlide = new LinearSlide();
     public Delivery delivery = new Delivery();
-    public EndGame endGame = new EndGame();
+    public LiftArms liftArms = new LiftArms();
     public Intake intake = new Intake();
     public ArtemisEyes eyes = new ArtemisEyes();
     List<LynxModule> allHubs;
@@ -43,12 +33,10 @@ public class ThunderbotAuto2023
 
     boolean moving = false;
 
-    public static double SPEED_GAIN = 0.0075;
-    public static double STRAFE_GAIN = 0.0075;
-    public static double  TURN_GAIN = 0.001;
-    public static double MAX_SPEED = 0.25;
-    public static double MAX_STRAFE = 0.1;
-    public static double MAX_TURN = 0.15;
+
+    public  double MAX_SPEED = 0.25;
+    public  double MAX_STRAFE = 0.1;
+    public  double MAX_TURN = 0.15;
 
 
     // converts inches to motor ticks
@@ -121,7 +109,7 @@ public class ThunderbotAuto2023
         try { delivery.init(ahwMap, telem, true); }
         catch(Exception e) { telemetry.addData("Delivery not found", 0); }
 
-        try {  endGame.init(ahwMap, telem); }
+        try {  liftArms.init(ahwMap, telem); }
         catch(Exception e) { telemetry.addData("Drone Launcher not found", 0); }
 
         try {  intake.init(ahwMap, telem, true); }
@@ -135,6 +123,9 @@ public class ThunderbotAuto2023
 
     public boolean driveToTag(int tagID, double speed, double distanceAway)
     {
+        double SPEED_GAIN = 0.0075;
+        double STRAFE_GAIN = 0.0075;
+        double  TURN_GAIN = 0.001;
         if (!moving)
         {
             moving = true;
@@ -190,7 +181,7 @@ public class ThunderbotAuto2023
                 delivery.update();
                 notifyTheDriver2 = delivery.gripperClosed();
             }
-            if ( endGame != null ) { endGame.update();}
+            if ( liftArms != null ) { liftArms.update();}
             if (linearSlide != null) {linearSlide.update(); }
         } catch (Exception e) {
             telemetry.addData("Exception in update() in Thunderbot2023 class.", 0);

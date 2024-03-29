@@ -16,7 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit.AM
 public class LinearSlide
 {
 
-    public static boolean TELEM = false ;
+    public static boolean TELEM = false;
     Telemetry telemetry;
 
     // Defining Motors
@@ -47,10 +47,10 @@ public class LinearSlide
         LEVEL_0(0),
         LEVEL_1(12),
         LEVEL_2(24),
-        LEVEL_3( 36);
+        LEVEL_3(36);
         public final double cmHeight;
 
-        Positions( double cm)
+        Positions(double cm)
         {
             cmHeight = cm;
         }
@@ -61,7 +61,8 @@ public class LinearSlide
     public void init(HardwareMap hwMap, Telemetry telem)
     {
         telemetry = telem;
-        try {
+        try
+        {
             leftLinear = hwMap.get(DcMotorEx.class, "lSlide");
             leftLinear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -69,11 +70,14 @@ public class LinearSlide
             leftLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // Set a max current on teh linear slide so that we can detect if we are stalling
             // the motors from going too high or too low.
-            leftLinear.setCurrentAlert( MAX_CURRENT_AMPS, AMPS);
-        } catch(Exception e) {
+            leftLinear.setCurrentAlert(MAX_CURRENT_AMPS, AMPS);
+        }
+        catch (Exception e)
+        {
             telemetry.addData("lSlide not found", 0);
         }
-        try {
+        try
+        {
             rightLinear = hwMap.get(DcMotorEx.class, "rSlide");
             rightLinear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightLinear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -81,37 +85,54 @@ public class LinearSlide
             rightLinear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             // Set a max current on teh linear slide so that we can detect if we are stalling
             // the motors from going too high or too low.
-            rightLinear.setCurrentAlert( MAX_CURRENT_AMPS, AMPS);
+            rightLinear.setCurrentAlert(MAX_CURRENT_AMPS, AMPS);
 
-        } catch(Exception e) {
+        }
+        catch (Exception e)
+        {
             telemetry.addData("rSlide not found", 0);
         }
 
     }
 
-    public void linearPower(double power) {
-        if (leftLinear != null ) {leftLinear.setPower(power);}
-        else { telemetry.addData("linear slide left motor not initialized.", 0); }
-        if (rightLinear != null ) { rightLinear.setPower(power); }
-        else { telemetry.addData("linear slide right  motor not initialized.", 0); }
+    public void linearPower(double power)
+    {
+        if (leftLinear != null)
+        {
+            leftLinear.setPower(power);
+        }
+        else
+        {
+            telemetry.addData("linear slide left motor not initialized.", 0);
+        }
+        if (rightLinear != null)
+        {
+            rightLinear.setPower(power);
+        }
+        else
+        {
+            telemetry.addData("linear slide right  motor not initialized.", 0);
+        }
     }
 
     // Math behind the positions of the linear slides and seeing where it needs to stop and start
 
     public void goToLinear(Positions pos)
     {
-        linearToPosition( pos.cmHeight, DEFAULT_POWER);
+        linearToPosition(pos.cmHeight, DEFAULT_POWER);
     }
 
-    public double getLiftPosition() {
-        return SCALE_FACTOR *  (leftSlidePosition) / COUNTS_PER_CM;
+    public double getLiftPosition()
+    {
+        return SCALE_FACTOR * (leftSlidePosition) / COUNTS_PER_CM;
     }
-    
 
-    public void linearToPosition( double cm, double power )
+
+    public void linearToPosition(double cm, double power)
     {
         targetCounts = (int) (cm * COUNTS_PER_CM);
-        if ( leftLinear != null  && rightLinear != null ) {
+        if (leftLinear != null && rightLinear != null)
+        {
             leftLinear.setTargetPosition(targetCounts);
             rightLinear.setTargetPosition(targetCounts);
             telemetry.addData("Target counts: ", targetCounts);
@@ -120,60 +141,83 @@ public class LinearSlide
             telemetry.addData("Motor mode", leftLinear.getMode());
             leftLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
             rightLinear.setVelocity(power * MAX_SPEED * COUNTS_PER_CM);
-        } else {
+        }
+        else
+        {
             telemetry.addData("linear slide motor not initialized.", 0);
         }
     }
 
-    public boolean isDone() { return leftLinear.isBusy() || rightLinear.isBusy();}
+    public boolean isDone()
+    {
+        return leftLinear.isBusy() || rightLinear.isBusy();
+    }
 
-    public double toggleUp( double cmToggle )
+    public double toggleUp(double cmToggle)
     {
         double targetCM = getLiftPosition() + cmToggle;
         targetCM = Range.clip(targetCM, MIN_POS, MAX_POS);
-        linearToPosition( targetCM, DEFAULT_POWER);
+        linearToPosition(targetCM, DEFAULT_POWER);
         return targetCM;
     }
 
     public double toggleDown(double cmToggle, boolean ignoreLimit)
     {
         double targetCM = getLiftPosition() - cmToggle;
-        if ( !ignoreLimit )
+        if (!ignoreLimit)
         {
             targetCM = Range.clip(targetCM, MIN_POS, MAX_POS);
         }
-        linearToPosition( targetCM, DEFAULT_POWER);
+        linearToPosition(targetCM, DEFAULT_POWER);
         return targetCM;
     }
-    public void slideTogglePositionsUp() {
+
+    public void slideTogglePositionsUp()
+    {
         double position = getLiftPosition();
-            if (position < Positions.LEVEL_1.cmHeight) {
-                goToLinear(Positions.LEVEL_1);
-            } else if (position < Positions.LEVEL_2.cmHeight) {
-                goToLinear(Positions.LEVEL_2);
-            } else if(position < Positions.LEVEL_3.cmHeight) {
-                goToLinear(Positions.LEVEL_3);
-            }
+        if (position < Positions.LEVEL_1.cmHeight)
+        {
+            goToLinear(Positions.LEVEL_1);
+        }
+        else if (position < Positions.LEVEL_2.cmHeight)
+        {
+            goToLinear(Positions.LEVEL_2);
+        }
+        else if (position < Positions.LEVEL_3.cmHeight)
+        {
+            goToLinear(Positions.LEVEL_3);
+        }
     }
-    public void slideTogglePositionsDown() {
+
+    public void slideTogglePositionsDown()
+    {
         double position = getLiftPosition();
-            if(position > Positions.LEVEL_3.cmHeight) {
-                goToLinear(Positions.LEVEL_3);
-            } else if (position > Positions.LEVEL_2.cmHeight) {
-                goToLinear(Positions.LEVEL_2);
-            } else if (position > Positions.LEVEL_1.cmHeight) {
-                goToLinear(Positions.LEVEL_1);
-            } else {
-                goToLinear(Positions.LEVEL_0);
-            }
+        if (position > Positions.LEVEL_3.cmHeight)
+        {
+            goToLinear(Positions.LEVEL_3);
+        }
+        else if (position > Positions.LEVEL_2.cmHeight)
+        {
+            goToLinear(Positions.LEVEL_2);
+        }
+        else if (position > Positions.LEVEL_1.cmHeight)
+        {
+            goToLinear(Positions.LEVEL_1);
+        }
+        else
+        {
+            goToLinear(Positions.LEVEL_0);
+        }
     }
-    public void update() {
-        if (leftLinear != null  && rightLinear != null )
+
+    public void update()
+    {
+        if (leftLinear != null && rightLinear != null)
         {
             leftSlidePosition = leftLinear.getCurrentPosition();
             rightSlidePosition = rightLinear.getCurrentPosition();
 
-            if ( TELEM )
+            if (TELEM)
             {
                 telemetry.addData("left Slide Position = ", leftSlidePosition);
                 telemetry.addData("Right Slide Position = ", rightSlidePosition);
@@ -198,7 +242,7 @@ public class LinearSlide
             telemetry.addData("linear slide motors not initialized.", 0);
         }
 
-        if ( TELEM )
+        if (TELEM)
         {
             telemetry.addData("Slide Position = ", getLiftPosition());
             telemetry.addData("Left Slide Position: ", leftSlidePosition);
@@ -206,6 +250,5 @@ public class LinearSlide
             telemetry.addData("stepNumber", stepNumber);
         }
     }
-
 }
 
