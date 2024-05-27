@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.LinearSlide;
 import org.firstinspires.ftc.teamcode.Robot.TBDGamepad;
 import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
+import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 
 @TeleOp(name = "Teleop", group = "Teleop")
 public class Teleop extends OpMode
@@ -38,8 +39,8 @@ public class Teleop extends OpMode
     public static double ELBOW_POSITION = Delivery.ELBOW_INIT;
     public static double INTAKE_INCREMENT = 0.01;
     public static double INTAKE_POSITION = Intake.INTAKEELBOW_INIT;
-    Thunderbot2023 robot = new Thunderbot2023();
-
+//    Thunderbot2023 robot = new Thunderbot2023();
+    ThunderbotAuto2023 robot = new ThunderbotAuto2023();
     boolean toggle = false;
 
     TBDGamepad tbdGamepad1;
@@ -165,19 +166,12 @@ public class Teleop extends OpMode
         }
 
 
-        if (robot.notifyDriver1())
+        if (robot.blipDriver1())
         {
-            tbdGamepad1.notifyDriver(1);
+            tbdGamepad1.blipDriver();
         }
 
-        ////////////////////
-        // AUTO ALIGN
-        ////////////////////
-        if (tbdGamepad1.getButton(A))
-        {
-            robot.alignToBackdrop(10, tbdGamepad1.getLeftX());
-            telemetry.addData("Attempting to line up", 0);
-        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////// GAMEPAD 2 //////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -274,9 +268,9 @@ public class Teleop extends OpMode
             robot.delivery.toggleGripperRight();
         }
 
-        if (robot.notifyDriver2())
+        if (robot.blipDriver2())
         {
-            tbdGamepad2.notifyDriver(1);
+            tbdGamepad2.blipDriver();
         }
     }
 }

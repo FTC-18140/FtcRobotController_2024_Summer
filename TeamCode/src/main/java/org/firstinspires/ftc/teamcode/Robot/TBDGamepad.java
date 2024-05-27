@@ -228,6 +228,11 @@ public class TBDGamepad
         gamepad.rumbleBlips(numBlips);
     }
 
+    public void blipDriver()
+    {
+        notifyDriver(1);
+    }
+
     public void update()
     {
         System.arraycopy(buttons, 0, oldButtons, 0, 14);

@@ -682,8 +682,8 @@ public class Thunderbot2023
         else  { return -1; }
     }
 
-    public boolean notifyDriver1() { return notifyTheDriver1; }
-    public boolean notifyDriver2() { return notifyTheDriver2; }
+    public boolean blipDriver1() { return notifyTheDriver1; }
+    public boolean blipDriver2() { return notifyTheDriver2; }
 
 
 }
