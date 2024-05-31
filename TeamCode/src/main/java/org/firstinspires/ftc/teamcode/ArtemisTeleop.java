@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.util.Range.clip;
 import static org.firstinspires.ftc.teamcode.Robot.Delivery.TWIST_INIT;
-import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.A;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.B;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.BACK;
 import static org.firstinspires.ftc.teamcode.Robot.TBDGamepad.Button.DPAD_DOWN;
@@ -24,11 +23,10 @@ import org.firstinspires.ftc.teamcode.Robot.Delivery;
 import org.firstinspires.ftc.teamcode.Robot.Intake;
 import org.firstinspires.ftc.teamcode.Robot.LinearSlide;
 import org.firstinspires.ftc.teamcode.Robot.TBDGamepad;
-import org.firstinspires.ftc.teamcode.Robot.Thunderbot2023;
 import org.firstinspires.ftc.teamcode.Robot.ThunderbotAuto2023;
 
-@TeleOp(name = "Teleop", group = "Teleop")
-public class Teleop extends OpMode
+@TeleOp(name = "Artemis Teleop", group = "Teleop")
+public class ArtemisTeleop extends OpMode
 {
 
     public static double WRIST_INCREMENT = 0.025;
